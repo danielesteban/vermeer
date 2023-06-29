@@ -17,9 +17,11 @@ void main() {
   vUV = uv;
   gl_Position = vec4(
     (
-      (position * vec3(size * 0.5, 1.0))
-      / vec3(vec2(resolution.x / resolution.y, 1.0) * zoom, 1.0)
+      (position.xy * size * 0.5)
+      / vec2(resolution.x / resolution.y, 1.0)
+      / zoom
     ),
+    0.0,
     1.0
   );
 }

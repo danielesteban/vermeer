@@ -24,7 +24,7 @@ import Art from './art.jpg';
 
 const size = new Vector2(512, 512);
 const dotsSize = new Vector2(128, 256);
-const zoom = size.y;
+const zoom = size.y * 0.5;
 
 const viewport = document.getElementById('viewport')!;
 const prevent = (e: DragEvent | MouseEvent | TouchEvent) => e.preventDefault();
@@ -71,7 +71,7 @@ const screen = new Mesh(plane);
   Dots.uniforms.resolution.value = resolution;
   Dots.uniforms.size.value = size;
   Dots.uniforms.stride.value = dotsSize.x;
-  Dots.uniforms.zoom.value = zoom * 0.5;
+  Dots.uniforms.zoom.value = zoom;
 }
 
 const dot = new InstancedBufferGeometry();
@@ -102,6 +102,7 @@ const load = async (url: string) => {
   texture.colorSpace = SRGBColorSpace;
   Velocity.uniforms.image.value = texture;
   Velocity.uniforms.imageSize.value.set(texture.image.width, texture.image.height);
+  Velocity.uniforms.intensity.value = 3.0;
   Velocity.uniforms.size.value.copy(size);
   screen.material = Velocity;
   renderer.setRenderTarget(target);
@@ -130,8 +131,7 @@ const load = async (url: string) => {
   renderer.setRenderTarget(targets[current]);
   renderer.render(screen, camera);
   renderer.setRenderTarget(null);
-  Compute.uniforms.dataMap.value.dispose();
-  Dots.uniforms.dataMap.value = targets[current].texture;
+  initialDataMap.dispose();
   return target.texture;
 };
 
@@ -139,7 +139,7 @@ const load = async (url: string) => {
 //   Debug.uniforms.image.value = velocityMap;
 //   Debug.uniforms.resolution.value = resolution;
 //   Debug.uniforms.size.value = size;
-//   Debug.uniforms.zoom.value = zoom * 0.5;
+//   Debug.uniforms.zoom.value = zoom;
 //   screen.material = Debug;
 //   renderer.render(screen, camera);
 // });

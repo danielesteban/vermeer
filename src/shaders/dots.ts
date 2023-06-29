@@ -24,9 +24,11 @@ void main() {
   vUV = (uv - 0.5) * 2.0;
   gl_Position = vec4(
     (
-      (position + vec3(data.xy * size - size * 0.5, 0))
-      / vec3(vec2(resolution.x / resolution.y, 1.0) * zoom, 1.0)
+      (position.xy + data.xy * size - size * 0.5)
+      / vec2(resolution.x / resolution.y, 1.0)
+      / zoom
     ),
+    0.0,
     1.0
   );
 }

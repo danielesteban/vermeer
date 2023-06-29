@@ -9,13 +9,14 @@ precision highp float;
 precision highp int;
 in vec3 position;
 in vec2 uv;
-out vec2 vUV;
 uniform vec2 imageSize;
 uniform vec2 size;
+flat out vec2 vPixel;
+out vec2 vUV;
 void main() {
-  vec2 outOffset = vec2(0.0, 0.0);
+  vec2 outOffset;
   vec2 outSize = size;
-  if (imageSize.x / imageSize.y > 1.0) {
+  if (imageSize.x / imageSize.y > size.x / size.y) {
     outSize.x *= imageSize.y / imageSize.x;
     outOffset.x = size.x * 0.5 - outSize.x * 0.5;
   } else {
@@ -24,6 +25,7 @@ void main() {
   }
   outSize /= size;
   outOffset /= size;
+  vPixel = outSize / size;
   vUV = uv * outSize + outOffset;
   gl_Position = vec4(position, 1.0);
 }
@@ -32,10 +34,10 @@ void main() {
 const fragmentShader = `
 precision highp float;
 precision highp int;
+flat in vec2 vPixel;
 in vec2 vUV;
 uniform sampler2D image;
 uniform float intensity;
-uniform vec2 size;
 out float velocity;
 float lightness(in vec3 rgb) {
   float min = min(min(rgb.r, rgb.g), rgb.b);
@@ -43,7 +45,7 @@ float lightness(in vec3 rgb) {
   return (min + max) / 2.0;
 }
 void main() {
-  vec3 offset = vec3((1.0 / size.x), (1.0 / size.y), 0.0);
+  vec3 offset = vec3(vPixel, 0.0);
   float pixelCenter = lightness(texture(image, vUV).rgb);
   float pixelLeft   = lightness(texture(image, vUV - offset.xz).rgb);
   float pixelRight  = lightness(texture(image, vUV + offset.xz).rgb);
@@ -63,7 +65,7 @@ export default new RawShaderMaterial({
   uniforms: {
     image: { value: null },
     imageSize: { value: new Vector2() },
-    intensity: { value: 3.0 },
+    intensity: { value: 0.0 },
     size: { value: new Vector2() },
   },
   vertexShader,
