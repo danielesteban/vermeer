@@ -49,6 +49,16 @@ const resize = () => {
 window.addEventListener('resize', resize);
 resize();
 
+const pointer = (new Vector2(Math.random() - 0.5, Math.random() - 0.5)).multiplyScalar(0.1);
+window.addEventListener('pointermove', ({ clientX, clientY, isPrimary }) => {
+  if (!isPrimary) {
+    return;
+  }
+  pointer.set((clientX / resolution.x) * 2 - 1, -(clientY / resolution.y) * 2 + 1);
+  const l = pointer.length() || 1;
+  pointer.multiplyScalar(((l + 0.1) / l) * 0.1);
+});
+
 // @ts-ignore
 const camera = new Camera();
 camera.position.z = 1;
@@ -89,6 +99,7 @@ let current = 0;
 const step = (delta: number) => {
   Compute.uniforms.dataMap.value = targets[current].texture;
   Compute.uniforms.delta.value = delta;
+  Compute.uniforms.direction.value.lerp(pointer, 1 - Math.exp(-30 * delta));
   current = (current + 1) % 2;
   screen.material = Compute;
   renderer.setRenderTarget(targets[current]);
