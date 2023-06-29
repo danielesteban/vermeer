@@ -1,0 +1,26 @@
+{
+  "name": "vermeer",
+  "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "start": "pnpm build -w"
+  },
+  "type": "module",
+  "dependencies": {
+    "three": "^0.154.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-html": "^1.0.2",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-terser": "^0.4.3",
+    "@rollup/plugin-typescript": "^11.1.2",
+    "@rollup/plugin-url": "^8.0.1",
+    "@types/three": "^0.152.1",
+    "postcss": "^8.4.24",
+    "rollup": "^3.25.3",
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-serve": "^2.0.2",
+    "tslib": "^2.6.0",
+    "typescript": "^5.1.6"
+  }
+}
