@@ -73,7 +73,7 @@ const screen = new Mesh(plane);
       colors[i] = Math.random();
       colors[i + 1] = Math.random();
       colors[i + 2] = Math.random();
-      colors[i + 3] = 1.0;
+      colors[i + 3] = 0.5 + Math.random() * 0.5;
     }
   }
   const colorMap = new DataTexture(colors, dotsSize.x, dotsSize.y, RGBAFormat, FloatType);
