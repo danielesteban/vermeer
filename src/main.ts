@@ -17,6 +17,7 @@ import {
 import Compute from './shaders/compute';
 // import Debug from './shaders/debug';
 import Dots from './shaders/dots';
+import Populate from './shaders/populate';
 import Velocity from './shaders/velocity';
 
 // @ts-ignore
@@ -119,35 +120,20 @@ const load = async (url: string) => {
   renderer.setRenderTarget(target);
   renderer.render(screen, camera);
   renderer.setRenderTarget(null);
-
-  const initialData = new Float32Array(dotsSize.x * dotsSize.y * 4);
-  for (let i = 0, y = 0; y < dotsSize.y; y++) {
-    for (let x = 0; x < dotsSize.x; x++, i+=4) {
-      initialData[i] = x / (dotsSize.x - 1);
-      initialData[i + 1] = y / (dotsSize.y - 1);
-      initialData[i + 2] = 0.0;
-      initialData[i + 3] = 2.0;
-    }
-  }
-  const initialDataMap = new DataTexture(initialData, dotsSize.x, dotsSize.y, RGBAFormat, FloatType);
-  initialDataMap.needsUpdate = true;
-  Compute.uniforms.dataMap.value = initialDataMap;
   if (Compute.uniforms.velocityMap.value) {
     Compute.uniforms.velocityMap.value.dispose();
   }
   Compute.uniforms.velocityMap.value = target.texture;
-  Compute.uniforms.delta.value = 0.0;
+
   current = 0;
-  screen.material = Compute;
+  screen.material = Populate;
   renderer.setRenderTarget(targets[current]);
   renderer.render(screen, camera);
   renderer.setRenderTarget(null);
-  initialDataMap.dispose();
-  return target.texture;
 };
 
-// load(Art).then((velocityMap) => {
-//   Debug.uniforms.image.value = velocityMap;
+// load(Art).then(() => {
+//   Debug.uniforms.image.value = Compute.uniforms.velocityMap.value;
 //   Debug.uniforms.resolution.value = resolution;
 //   Debug.uniforms.size.value = size;
 //   Debug.uniforms.zoom.value = zoom;

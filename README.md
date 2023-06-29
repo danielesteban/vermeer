@@ -8,11 +8,9 @@
  * Load a texture
  * Render it with the [Velocity](src/shaders/velocity.ts) shader to get a velocity map
    * The velocity map stores the difference in lightness for every pixel
- * Create a color map with a random color for every dot
  * Setup two ping-pong rendertargets
- * Create a data texture with the initial positions and velocity for every dot
-   * Render it into the first rendertarget
-
+ * [Populate](src/shaders/populate.ts) the first render target with the initial position and velocity for every dot
+ * Generate a color map with a random color for every dot
 
 #### Compute pass (Runs every frame)
 
