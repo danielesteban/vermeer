@@ -1,6 +1,7 @@
 import './main.css';
 import {
   Camera,
+  Color,
   DataTexture,
   FloatType,
   InstancedBufferGeometry,
@@ -24,7 +25,7 @@ import Velocity from './shaders/velocity';
 import Art from './art.jpg';
 
 const size = new Vector2(512, 512);
-const dotsSize = new Vector2(128, 256);
+const dotsSize = new Vector2(256, 256);
 const zoom = size.y * 0.5;
 
 const viewport = document.getElementById('viewport')!;
@@ -67,12 +68,14 @@ const plane = new PlaneGeometry(2, 2, 1, 1);
 const screen = new Mesh(plane);
 
 {
+  const color = new Color();
   const colors = new Float32Array(dotsSize.x * dotsSize.y * 4);
   for (let i = 0, y = 0; y < dotsSize.y; y++) {
     for (let x = 0; x < dotsSize.x; x++, i+=4) {
-      colors[i] = Math.random();
-      colors[i + 1] = Math.random();
-      colors[i + 2] = Math.random();
+      color.setHSL(Math.random(), Math.random(), Math.random() * 0.8);
+      colors[i] = color.r;
+      colors[i + 1] = color.g;
+      colors[i + 2] = color.b;
       colors[i + 3] = 0.5 + Math.random() * 0.5;
     }
   }
@@ -114,7 +117,7 @@ const load = async (url: string) => {
   texture.colorSpace = SRGBColorSpace;
   Velocity.uniforms.image.value = texture;
   Velocity.uniforms.imageSize.value.set(texture.image.width, texture.image.height);
-  Velocity.uniforms.intensity.value = 3.0;
+  Velocity.uniforms.intensity.value = 4.0;
   Velocity.uniforms.size.value.copy(size);
   screen.material = Velocity;
   renderer.setRenderTarget(target);
